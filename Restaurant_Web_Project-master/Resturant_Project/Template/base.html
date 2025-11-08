@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+{% load static %}
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="keywords" content="hamburguer, artesanal, ugino, japoatã, lanche, delivery" />
+  <meta name="description" content="Ugino Hamburgueria - Sabor artesanal que une pessoas e cria momentos inesquecíveis." />
+  <meta name="author" content="Cauan Ugino" />
+
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
+  <title>Ugino Hamburgueria</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+
+  <!-- Owl Carousel -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- Nice Select -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+
+  <!-- Font Awesome -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+
+  <!-- Custom styles -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+</head>
+
+<body {% block class %}{% endblock class %}>
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="{% static 'images/hero-bg.jpg' %}" alt="Banner Ugino Hamburgueria">
+    </div>
+
+    <!-- Header -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="{% url 'Home' %}">
+            <span>Ugino Hamburgueria</span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Alternar navegação">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item {% block home_status %}{% endblock home_status %}">
+                <a class="nav-link" href="{% url 'Home' %}">Início</a>
+              </li>
+              <li class="nav-item {% block menu_status %}{% endblock menu_status %}">
+                <a class="nav-link" href="{% url 'Menu' %}">Cardápio</a>
+              </li>
+              <li class="nav-item {% block about_status %}{% endblock about_status %}">
+                <a class="nav-link" href="{% url 'About' %}">Sobre</a>
+              </li>
+              <li class="nav-item {% block table_status %}{% endblock table_status %}">
+                <a class="nav-link" href="{% url 'Book_Table' %}">Reserva</a>
+              </li>
+              <li class="nav-item {% block feedback_status %}{% endblock feedback_status %}">
+                <a class="nav-link" href="{% url 'Feedback_Form' %}">Feedback</a>
+              </li>
+            </ul>
+
+            <!-- User Options -->
+            <div class="user_option">
+              {% if user.is_authenticated %}
+              <span style="background-color: #f8c6c6; color: #000; padding: 5px 10px; border-radius: 5px; font-weight: bold;">
+                {{ user.username }}
+              </span>
+              <a href="{% url 'logout' %}" class="btn btn-secondary ml-2">Sair</a>
+              <button id="cart-button" class="btn btn-primary ml-2" style="font-size: 12px; padding: 1px 15px;">
+                <i class="fa fa-shopping-cart"></i> Carrinho
+              </button>
+              {% else %}
+              <a href="{% url 'login' %}" class="btn order_online">Entrar</a>
+              {% endif %}
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- End Header -->
+
+    {% block slider %}{% endblock slider %}
+  </div>
+
+  {% block main %}{% endblock main %}
+
+  <!-- Footer -->
+  <footer class="footer_section">
+    <div class="container">
+      <div class="row">
+        <!-- Contato -->
+        <div class="col-md-4 footer-col">
+          <div class="footer_contact">
+            <h4>Entre em contato</h4>
+            <div class="contact_link_box">
+              <a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span>Japoatã, SE</span></a>
+              <a href="#"><i class="fa fa-phone" aria-hidden="true"></i><span>+55 (79) 9 9999-9999</span></a>
+              <a href="#"><i class="fa fa-envelope" aria-hidden="true"></i><span>natanuginofilho@gmail.com</span></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sobre -->
+        <div class="col-md-4 footer-col">
+          <div class="footer_detail">
+            <a href="#" class="footer-logo">Ugino</a>
+            <p>
+              Acreditamos que cada hambúrguer tem o poder de unir pessoas e criar momentos inesquecíveis.
+              Na <strong>Ugino Hamburgueria</strong>, cada receita é preparada com dedicação, ingredientes selecionados e aquele toque artesanal que transforma o simples ato de comer em uma experiência única.
+            </p>
+            <div class="footer_social">
+              <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              <a href="https://www.instagram.com/ugino_doceria/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Horários -->
+        <div class="col-md-4 footer-col">
+          <h4>Horário de funcionamento</h4>
+          <p>Todos os dias</p>
+          <p>10:00 AM - 10:00 PM</p>
+        </div>
+      </div>
+
+      <div class="footer-info text-center">
+        <p>
+          &copy; <span id="displayYear"></span> Todos os direitos reservados | Ugino Hamburgueria <br>
+          Desenvolvido por <strong>Cauan Ugino</strong>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
+
+  <!-- Carrinho -->
+  <script>
+    document.getElementById('cart-button').addEventListener('click', function () {
+      fetch('/get-cart-items/')
+        .then(response => response.json())
+        .then(data => {
+          const cartList = document.getElementById('cart-items-list');
+          cartList.innerHTML = '';
+          if (data.items && data.items.length > 0) {
+            data.items.forEach(item => {
+              cartList.innerHTML += `<li>${item.name} - ${item.quantity} x R$${item.price} = R$${item.total}</li>`;
+            });
+          } else {
+            cartList.innerHTML = '<li>Seu carrinho está vazio.</li>';
+          }
+          $('#cart-modal').modal('show');
+        })
+        .catch(error => console.error('Erro ao carregar o carrinho:', error));
+    });
+  </script>
+</body>
+</html>

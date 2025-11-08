@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block class %}class="sub_page"{% endblock class %}
+{% block feedback_status %}active{% endblock feedback_status %}
+
+{% block main %}
+
+<!-- Seção de Feedback -->
+<section class="book_section layout_padding">
+  <div class="container">
+    <div class="heading_container text-center mb-5">
+      <h2 class="fw-bold text-danger">Deixe seu Feedback</h2>
+      <p class="text-muted fs-5">
+        Sua opinião é o tempero especial que deixa a <strong>Ugino Hamburgueria</strong> ainda mais saborosa!  
+        Conta pra gente como foi sua experiência
+      </p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="form_container shadow-lg p-4 rounded-4 bg-white border-0">
+
+          {% if messages %}
+            <div class="alert alert-info text-center">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form id="feedback-form" action="{% url 'Feedback_Form' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">Seu nome</label>
+              <input type="text" class="form-control form-control-lg" name="User_name" required placeholder="Ex: João Silva">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">Como foi sua experiência?</label>
+              <textarea class="form-control form-control-lg" name="Description" rows="4" required placeholder="Conte sobre o sabor, o atendimento ou o ambiente..."></textarea>
+            </div>
+
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold text-dark d-block mb-2">Sua nota</label>
+              <div class="rating" id="star-rating">
+                <input type="radio" name="Rating" value="5" id="star5" required><label for="star5" title="Excelente">⭐</label>
+                <input type="radio" name="Rating" value="4" id="star4"><label for="star4" title="Muito bom">⭐</label>
+                <input type="radio" name="Rating" value="3" id="star3"><label for="star3" title="Bom">⭐</label>
+                <input type="radio" name="Rating" value="2" id="star2"><label for="star2" title="Regular">⭐</label>
+                <input type="radio" name="Rating" value="1" id="star1"><label for="star1" title="Ruim">⭐</label>
+              </div>
+              <small id="rating-text" class="text-muted mt-2 d-block"></small>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">Envie uma foto (opcional)</label>
+              <input class="form-control form-control-lg" name="Selfie" id="formFileLg" type="file" accept="image/*">
+              <small class="text-muted">Pode ser sua selfie, seu lanche ou um momento especial!</small>
+            </div>
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-danger px-5 py-2 fs-5 rounded-pill shadow-sm">
+                Enviar Feedback
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Estilos adicionais -->
+<style>
+  .rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .rating input {
+    display: none;
+  }
+
+  .rating label {
+    font-size: 2.3rem;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+    color: #ccc;
+  }
+
+  .rating input:checked ~ label,
+  .rating label:hover,
+  .rating label:hover ~ label {
+    color: gold;
+    transform: scale(1.1);
+  }
+
+  .rating label:hover ~ label {
+    color: gold;
+  }
+
+  .form_container {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .form_container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+
+  textarea:focus, input:focus {
+    border-color: #ff5252 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 82, 82, 0.25);
+  }
+</style>
+
+<!-- SweetAlert e script interativo -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Atualiza texto conforme a nota
+  const ratingText = document.getElementById('rating-text');
+  const stars = document.querySelectorAll('.rating input');
+
+  const feedbackText = {
+    1: '😞 Ruim',
+    2: '😐 Regular',
+    3: '🙂 Bom',
+    4: '😋 Muito bom!',
+    5: '😍 Excelente!'
+  };
+
+  stars.forEach(star => {
+    star.addEventListener('change', () => {
+      ratingText.textContent = feedbackText[star.value];
+    });
+  });
+
+  // Confirmação dinâmica ao enviar
+  document.getElementById('feedback-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    Swal.fire({
+      title: "Obrigado pelo seu feedback! 🎉",
+      text: "Sua opinião ajuda a deixar nossa hamburgueria ainda melhor.",
+      icon: "success",
+      confirmButtonText: "Enviar agora",
+      confirmButtonColor: "#d33",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar"
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.submit();
+      }
+    });
+  });
+</script>
+
+{% endblock main %}

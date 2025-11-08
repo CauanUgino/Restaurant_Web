@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block class %}class="sub_page"{% endblock class %}
+{% block table_status %}active{% endblock table_status %}
+{% block main %}
+
+<!-- seção de reservas -->
+<section class="book_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2>Reserve sua Mesa</h2>
+      <p>Garanta seu lugar na Ugino Hamburgueria e viva uma experiência cheia de sabor!</p>
+    </div>
+
+    <div class="row">
+      <!-- Formulário -->
+      <div class="col-md-6">
+        <div class="form_container shadow p-4 rounded bg-light">
+          
+          {% if messages %}
+          <div class="alert alert-info">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <form action="{% url 'Book_Table' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <input type="text" class="form-control" name="user_name" required placeholder="Seu nome" />
+            </div>
+
+            <div class="mb-3">
+              <input type="text" class="form-control" name="phone_number" required placeholder="Telefone" />
+            </div>
+
+            <div class="mb-3">
+              <input type="email" class="form-control" name="user_email" placeholder="E-mail (opcional)" />
+            </div>
+
+            <div class="mb-3">
+              <select class="form-control" required name="total_person">
+                <option value="" disabled selected>Quantas pessoas?</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5+">5 ou mais</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <input type="date" required name="booking_data" class="form-control" />
+            </div>
+
+            <div class="btn_box text-center">
+              <button class="btn btn-danger px-4 py-2">
+                Reservar Agora
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Mapa do Google -->
+      <div class="col-md-6 mt-4 mt-md-0">
+        <div class="map_container rounded shadow">
+          <div id="googleMap" style="height: 400px; width: 100%; border-radius: 12px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Google Maps -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap" async defer></script>
+
+<script>
+function initMap() {
+  // Localização da Ugino Hamburgueria (altere para suas coordenadas)
+  var restaurantLocation = { lat: -23.55052, lng: -46.633308 }; // Exemplo: São Paulo
+
+  var map = new google.maps.Map(document.getElementById('googleMap'), {
+    zoom: 15,
+    center: restaurantLocation,
+    styles: [
+      { featureType: "poi.business", stylers: [{ visibility: "off" }] },
+      { featureType: "road", elementType: "geometry", stylers: [{ color: "#f8c6c6" }] },
+      { featureType: "water", stylers: [{ color: "#cce7ff" }] }
+    ]
+  });
+
+  new google.maps.Marker({
+    position: restaurantLocation,
+    map: map,
+    title: "Ugino Hamburgueria 🍔"
+  });
+}
+</script>
+
+{% endblock main %}

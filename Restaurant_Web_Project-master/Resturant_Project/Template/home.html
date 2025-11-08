@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block home_status %}active{% endblock home_status %}
+{% load static %}
+
+{% block slider %}
+<!-- slider section -->
+<section class="slider_section">
+  <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-7 col-lg-6">
+              <div class="detail-box">
+                <h1>Ugino Hamburgueria</h1>
+                <p class="lead mt-3">
+                  Acreditamos que cada hambúrguer é mais do que uma refeição — é uma experiência.  
+                  Na <strong>Ugino Hamburgueria</strong>, unimos sabor, qualidade e aquele toque artesanal 
+                  que transforma um simples lanche em um momento inesquecível.
+                </p>
+                <p>
+                  Cada ingrediente é escolhido com cuidado e cada hambúrguer é preparado com paixão, 
+                  para que você sinta o prazer de comer algo feito especialmente para você.
+                </p>
+                <div class="btn-box mt-4">
+                  <a href="#menu" class="btn1">Ver Cardápio</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <ol class="carousel-indicators">
+        <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
+      </ol>
+    </div>
+  </div>
+</section>
+<!-- end slider section -->
+{% endblock slider %}
+
+{% block main %}
+
+<!-- offer section -->
+<section class="offer_section layout_padding-bottom">
+  <div class="offer_container">
+    <div class="container">
+      <div class="heading_container heading_center mb-5">
+        <h2>Promoções da Semana</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="box shadow">
+            <div class="img-box">
+              <img src="{% static 'images/promo1.jpg' %}" alt="Promoção quinta saborosa" class="img-fluid rounded">
+            </div>
+            <div class="detail-box">
+              <h5>Quinta do Sabor</h5>
+              <h6><span>20%</span> OFF nos combos artesanais</h6>
+              <a href="#menu">Peça Agora</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="box shadow">
+            <div class="img-box">
+              <img src="{% static 'images/promo2.jpg' %}" alt="Combo duplo sexta" class="img-fluid rounded">
+            </div>
+            <div class="detail-box">
+              <h5>Sexta do Duplo</h5>
+              <h6><span>Leve 2</span> e pague 1 em hambúrgueres selecionados</h6>
+              <a href="#menu">Aproveitar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end offer section -->
+
+<!-- menu section -->
+<section id="menu" class="food_section layout_padding-bottom">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>Nosso Cardápio</h2>
+    </div>
+
+    <ul class="filters_menu">
+      <li class="active" data-filter="*">Todos</li>
+      {% for i in list %}
+      <li data-filter=".{{i.Category_name}}">{{i.Category_name}}</li>
+      {% endfor %}
+    </ul>
+
+    <div class="filters-content">
+      <div class="row grid">
+        {% for j in items %}
+        <div class="col-sm-6 col-lg-4 all {{j.Category}}">
+          <div class="box shadow-sm">
+            <div class="img-box">
+              <img src="/media/{{j.Image}}" alt="{{j.Item_name}}" class="img-fluid rounded">
+            </div>
+            <div class="detail-box">
+              <h5>{{j.Item_name}}</h5>
+              <p>{{j.description}}</p>
+              <div class="options d-flex justify-content-between align-items-center">
+                <h6>R$ {{j.Price}}</h6>
+                <button class="btn btn-warning btn-sm add-to-cart" 
+                        data-item-id="{{j.id}}" 
+                        data-item-name="{{j.Item_name}}" 
+                        data-item-price="{{j.Price}}">
+                  <i class="fa fa-cart-plus"></i> Adicionar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end menu section -->
+
+<!-- client section -->
+<section class="client_section layout_padding-bottom">
+  <div class="container">
+    <div class="heading_container heading_center psudo_white_primary mb_45">
+      <h2>O que dizem nossos clientes</h2>
+    </div>
+    <div class="carousel-wrap row">
+      <div class="owl-carousel client_owl-carousel">
+        {% for k in review %}
+        <div class="item">
+          <div class="box shadow">
+            <div class="detail-box">
+              <p>"{{k.Description}}"</p>
+              <h6>{{k.User_name}}</h6>
+              <p>⭐ {{k.Rating}}/5</p>
+            </div>
+            <div class="img-box">
+              <img src="/media/{{k.Image}}" alt="{{k.User_name}}" class="rounded-circle">
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end client section -->
+
+<script>
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+      const itemId = this.getAttribute('data-item-id');
+      fetch('/add-to-cart/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFTOKEN': '{{ csrf_token }}'
+        },
+        body: `item_id=${itemId}`
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message || 'Erro ao adicionar ao carrinho.'))
+      .catch(() => alert('Erro na conexão com o servidor.'));
+    });
+  });
+</script>
+
+{% endblock main %}

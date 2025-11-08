@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block class %}class="sub_page"{% endblock class %}
+{% block menu_status %}active{% endblock menu_status %}
+
+{% block main %}
+
+<!-- food section -->
+<section class="food_section layout_padding-bottom">
+  <div class="container">
+    <div class="heading_container heading_center mb-5">
+      <h2 class="fw-bold">Nosso Cardápio</h2>
+      <p class="text-muted">
+        Escolha entre os melhores lanches, acompanhamentos e bebidas da <strong>Ugino Hamburgueria</strong>!
+      </p>
+    </div>
+
+    <!-- Filtros -->
+    <ul class="filters_menu d-flex justify-content-center flex-wrap mb-4">
+      <li class="active" data-filter="*">Todos</li>
+      {% for i in list %}
+        <li data-filter=".{{ i.Category_name }}">{{ i.Category_name }}</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Itens do cardápio -->
+    <div class="filters-content">
+      <div class="row grid g-4">
+        {% for j in items %}
+        <div class="col-sm-6 col-lg-4 all {{ j.Category }}">
+          <div class="box shadow-sm border-0 rounded-3 h-100">
+            <div class="img-box position-relative overflow-hidden" style="height: 220px;">
+              <img src="/media/{{ j.Image }}" alt="{{ j.Item_name }}" class="img-fluid w-100 h-100 object-fit-cover">
+            </div>
+            <div class="detail-box p-3">
+              <h5 class="fw-bold">{{ j.Item_name }}</h5>
+              <p class="text-muted small mb-2">{{ j.description|truncatewords:20 }}</p>
+              <div class="options d-flex justify-content-between align-items-center">
+                <h6 class="text-success fw-bold">R$ {{ j.Price }}</h6>
+                <button class="btn btn-sm btn-primary add-to-cart" 
+                        data-item-id="{{ j.id }}" 
+                        data-item-name="{{ j.Item_name }}" 
+                        data-item-price="{{ j.Price }}">
+                  <i class="fa fa-cart-plus me-1"></i> Adicionar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+          <p class="text-muted">Nenhum item disponível no momento.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Ver mais -->
+    <div class="btn-box text-center mt-5">
+      <a href="#" class="btn btn-outline-dark px-4 py-2 rounded-pill">
+        Ver mais itens
+      </a>
+    </div>
+  </div>
+</section>
+<!-- end food section -->
+
+<!-- Script para adicionar ao carrinho -->
+<script>
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', async () => {
+      const itemId = button.dataset.itemId;
+      const itemName = button.dataset.itemName;
+      const itemPrice = button.dataset.itemPrice;
+
+      try {
+        const response = await fetch('/add-to-cart/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFTOKEN': '{{ csrf_token }}'
+          },
+          body: new URLSearchParams({ item_id: itemId })
+        });
+
+        const data = await response.json();
+
+        if (data.message) {
+          Swal.fire({
+            title: "Adicionado!",
+            text: `${itemName} foi adicionado ao carrinho.`,
+            icon: "success",
+            timer: 1800,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire({
+            title: "Erro!",
+            text: "Não foi possível adicionar ao carrinho.",
+            icon: "error"
+          });
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        Swal.fire({
+          title: "Erro!",
+          text: "Ocorreu um problema de conexão.",
+          icon: "error"
+        });
+      }
+    });
+  });
+</script>
+
+<!-- SweetAlert (para alertas bonitos) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock main %}
